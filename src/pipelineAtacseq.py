@@ -307,6 +307,7 @@ def getRandomSampleRows(infile,
 
 
 # Based on PipelineChromHMM.coverageHistogram
+# Requirements: The values are equal or higher to 0
 #  
 # Computes a histogram taking the values from values_file and
 # using the specified number_bins. Stores the output on the outfile.

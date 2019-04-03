@@ -40,6 +40,10 @@ TODO:
 
 Changelog (Rerun any data before these dates):
 
+-24/01/2019: Shouldn't affect anything it only allows the pipeline to execute group_normalized_overlap_sample_with_common_peaks
+ when there is only one sample.
+
+
 -08/05/2018: Shouldn't affect anything apart from the output name from the task plot_heatmap_with_dendrograms which
 is now name.png and not name.png.png
 If the file isn't provided, the task should execute in the same way
@@ -2457,6 +2461,30 @@ def group_normalized_overlap_sample_with_common_peaks(infiles, outfile):
                     '''
             
         P.run()
+
+    # If there is only one file, just copy it
+    else:
+
+        infile = infiles[0]
+
+        # Get the sample name from the infile
+        sample_name = os.path.basename(infile)
+
+        sample_name = sample_name[:-72]
+
+        # Output a header with a single sample
+        statement = '''header=$(printf "chrom\\tstart\\tend\\t%(sample_name)s") &&
+                    
+                    echo "$header" > %(outfile_temp)s &&
+                    
+                    zcat %(infile)s >> %(outfile_temp)s &&
+                     
+                     cat %(outfile_temp)s | gzip > %(outfile)s &&
+                     
+                     rm %(outfile_temp)s'''
+
+        P.run()
+
         
 
 
